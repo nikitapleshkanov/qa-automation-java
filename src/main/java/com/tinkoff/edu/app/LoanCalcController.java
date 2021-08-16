@@ -1,10 +1,15 @@
 package com.tinkoff.edu.app;
 
+/**
+ * Describe working with api
+ */
+
 public class LoanCalcController {
 
     public static int createRequest() {
-        LoanCalcLogger.log();
-        return LoanCalcService.createLoanRequest();
+        int requestId = LoanCalcService.createLoanRequest();
+        LoanCalcLogger.log(requestId);
+        return requestId;
     }
 
 }
