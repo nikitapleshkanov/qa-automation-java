@@ -8,7 +8,7 @@ public class LoanCalcRepository {
 
     private static int requestId;
 
-    public static int save() {
+    public int save() {
         return ++requestId;
     }
 }
