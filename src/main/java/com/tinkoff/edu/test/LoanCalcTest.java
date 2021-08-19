@@ -10,7 +10,7 @@ public class LoanCalcTest {
         LoanRequest loanRequest = new LoanRequest(10, 1000);
         LoanCalcController controller = new LoanCalcController();
         LoanResponse loanResponse = controller.createRequest(loanRequest);
-        System.out.println("Your request number is: " + loanResponse.getRequestId()
+        System.out.println("Your request number is: " + loanResponse.getRequestId() + ';'
                 + " Is your request accepted: " + loanResponse.getIsAccepted());
     }
 

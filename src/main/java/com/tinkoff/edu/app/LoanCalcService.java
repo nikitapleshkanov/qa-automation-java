@@ -11,10 +11,14 @@ public class LoanCalcService {
         LoanCalcRepository repository = new LoanCalcRepository();
         int requestId = repository.save();
         LoanResponse loanResponse = new LoanResponse(requestId);
-        if (request.getAmount() > 0 && request.getMonths() < 24) {
-            loanResponse.setIsAccepted(true);
-        }
+        loanResponse.setIsAccepted(checkIfLoanAccepted(request));
         return loanResponse;
+    }
+
+    private boolean checkIfLoanAccepted(LoanRequest request) {
+        if (request.getAmount() > 0 && request.getMonths() < 24) {
+            return true;
+        } else return false;
     }
 
 }
