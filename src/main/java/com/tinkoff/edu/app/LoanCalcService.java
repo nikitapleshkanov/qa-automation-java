@@ -7,8 +7,14 @@ package com.tinkoff.edu.app;
 
 public class LoanCalcService {
 
-    public static int createLoanRequest() {
-        return LoanCalcRepository.save();
+    public LoanResponse createLoanRequest(LoanRequest request) {
+        LoanCalcRepository repository = new LoanCalcRepository();
+        int requestId = repository.save();
+        LoanResponse loanResponse = new LoanResponse(requestId);
+        if (request.getAmount() > 0 && request.getMonths() < 24) {
+            loanResponse.setIsAccepted(true);
+        }
+        return loanResponse;
     }
 
 }
