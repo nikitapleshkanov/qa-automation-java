@@ -1,8 +1,6 @@
 package com.tinkoff.edu.app;
 
-
 public class LoanResponse {
-
 
     private LoanResponseType isAccepted;
     private final int requestId;
