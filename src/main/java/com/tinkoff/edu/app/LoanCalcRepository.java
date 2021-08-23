@@ -1,14 +1,7 @@
 package com.tinkoff.edu.app;
 
-/**
- * Describe data saving
- */
+public interface LoanCalcRepository {
 
-public class LoanCalcRepository {
+    int save();
 
-    private static int requestId;
-
-    public int save() {
-        return ++requestId;
-    }
 }
