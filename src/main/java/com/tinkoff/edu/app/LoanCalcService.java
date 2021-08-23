@@ -4,6 +4,6 @@ public interface LoanCalcService {
 
     LoanResponse createLoanRequest(LoanRequest request);
 
-    boolean checkIfLoanAccepted(LoanRequest request);
+    LoanResponseType checkIfLoanAccepted(LoanRequest request);
 
 }

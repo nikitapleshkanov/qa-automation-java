@@ -4,7 +4,6 @@ package com.tinkoff.edu.app;
 /**
  * Describe data counting
  */
-
 public class CalculationsWithAllParamsService implements LoanCalcService {
 
     private LoanCalcRepository repository;
@@ -20,8 +19,10 @@ public class CalculationsWithAllParamsService implements LoanCalcService {
         return loanResponse;
     }
 
-    public boolean checkIfLoanAccepted(LoanRequest request) {
-        return request.getAmount() > 0 && request.getMonths() < 24 && request.getLoanType().equals(LoanType.IP);
+    public LoanResponseType checkIfLoanAccepted(LoanRequest request) {
+        if (request.getAmount() > 0 && request.getMonths() < 24 && request.getLoanType().equals(LoanType.IP)) {
+            return LoanResponseType.APPROVED;
+        } else return LoanResponseType.DENIED;
     }
 
 }

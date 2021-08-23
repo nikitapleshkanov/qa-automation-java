@@ -4,15 +4,15 @@ package com.tinkoff.edu.app;
 public class LoanResponse {
 
 
-    private boolean isAccepted;
+    private LoanResponseType isAccepted;
     private final int requestId;
 
     public LoanResponse(int requestId) {
         this.requestId = requestId;
-        this.isAccepted = false;
+        this.isAccepted = LoanResponseType.DENIED;
     }
 
-    public boolean getIsAccepted() {
+    public LoanResponseType getIsAccepted() {
         return isAccepted;
     }
 
@@ -20,7 +20,7 @@ public class LoanResponse {
         return requestId;
     }
 
-    public void setIsAccepted(boolean isAccepted) {
+    public void setIsAccepted(LoanResponseType isAccepted) {
         this.isAccepted = isAccepted;
     }
 }

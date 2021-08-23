@@ -16,7 +16,7 @@ public class LoanCalcTest {
         LoanCalcController controller = new LoanCalcController(new CalculationsWithAllParamsService(repository));
         LoanResponse loanResponse = controller.createRequest(loanRequest);
         System.out.println("Your request number is: " + loanResponse.getRequestId() + ';'
-                + " Is your request accepted: " + loanResponse.getIsAccepted());
+                + "Your request status is: " + loanResponse.getIsAccepted());
     }
 
 }
