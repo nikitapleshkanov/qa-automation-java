@@ -34,6 +34,7 @@ public class AppTest {
                 + "Your request status is: " + loanResponse.getIsAccepted());
         Assertions.assertEquals(LoanResponseType.APPROVED, loanResponse.getIsAccepted());
         Assertions.assertEquals(1, loanResponse.getRequestId());
+        finalCheck(LoanResponseType.APPROVED, 1, loanResponse);
     }
 
     @Test
@@ -44,8 +45,12 @@ public class AppTest {
         LoanResponse loanResponse = controller.createRequest(loanRequest);
         System.out.println("Your request number is: " + loanResponse.getRequestId() + "; "
                 + "Your request status is: " + loanResponse.getIsAccepted());
-        Assertions.assertEquals(LoanResponseType.APPROVED, loanResponse.getIsAccepted());
-        Assertions.assertEquals(newId + 1, loanResponse.getRequestId());
+        finalCheck(LoanResponseType.APPROVED, newId + 1, loanResponse);
+    }
+
+    private void finalCheck(LoanResponseType expectedLoanType, int expectedId, LoanResponse loanResponse) {
+        Assertions.assertEquals(expectedLoanType, loanResponse.getIsAccepted());
+        Assertions.assertEquals(expectedId, loanResponse.getRequestId());
     }
 
 }
