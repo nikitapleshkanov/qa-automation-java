@@ -27,22 +27,24 @@ public class AppTest {
     }
 
     @Test
-    @DisplayName("Тест с id = 1")
+    @DisplayName("Проверка одобрения заявки")
     public void shouldAnswerWithTrue() {
         LoanResponse loanResponse = controller.createRequest(loanRequest);
         System.out.println("Your request number is: " + loanResponse.getRequestId() + "; "
                 + "Your request status is: " + loanResponse.getIsAccepted());
         Assertions.assertEquals(LoanResponseType.APPROVED, loanResponse.getIsAccepted());
+        Assertions.assertEquals(1, loanResponse.getRequestId());
     }
 
     @Test
-    @DisplayName("Тест с произвольным id")
+    @DisplayName("Проверка одобрения заявки с произвольным id")
     public void initCustomRequestId() {
         int newId = 50;
         repository.setRequestId(newId);
         LoanResponse loanResponse = controller.createRequest(loanRequest);
         System.out.println("Your request number is: " + loanResponse.getRequestId() + "; "
                 + "Your request status is: " + loanResponse.getIsAccepted());
+        Assertions.assertEquals(LoanResponseType.APPROVED, loanResponse.getIsAccepted());
         Assertions.assertEquals(newId + 1, loanResponse.getRequestId());
     }
 
