@@ -8,7 +8,7 @@ import com.tinkoff.edu.app.LoanRequest;
 import com.tinkoff.edu.app.LoanResponse;
 import com.tinkoff.edu.app.LoanResponseType;
 import com.tinkoff.edu.app.LoanType;
-import com.tinkoff.edu.app.StaticVariableLoanCalcRepository;
+import com.tinkoff.edu.app.VariableLoanCalcRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,13 +22,13 @@ public class AppTest {
     @BeforeEach
     public void init() {
         loanRequest = new LoanRequest(10, 1000, LoanType.IP);
-        repository = new StaticVariableLoanCalcRepository();
-        controller = new LoanCalcController(new CalculationsWithAllParamsService(repository));
     }
 
     @Test
     @DisplayName("Проверка одобрения заявки")
     public void shouldAnswerWithTrue() {
+        repository = new VariableLoanCalcRepository();
+        controller = new LoanCalcController(new CalculationsWithAllParamsService(repository));
         LoanResponse loanResponse = controller.createRequest(loanRequest);
         System.out.println("Your request number is: " + loanResponse.getRequestId() + "; "
                 + "Your request status is: " + loanResponse.getIsAccepted());
@@ -40,8 +40,9 @@ public class AppTest {
     @Test
     @DisplayName("Проверка одобрения заявки с произвольным id")
     public void initCustomRequestId() {
-        int newId = 50;
-        repository.setRequestId(newId);
+        final int newId = 50;
+        repository = new VariableLoanCalcRepository(newId);
+        controller = new LoanCalcController(new CalculationsWithAllParamsService(repository));
         LoanResponse loanResponse = controller.createRequest(loanRequest);
         System.out.println("Your request number is: " + loanResponse.getRequestId() + "; "
                 + "Your request status is: " + loanResponse.getIsAccepted());
