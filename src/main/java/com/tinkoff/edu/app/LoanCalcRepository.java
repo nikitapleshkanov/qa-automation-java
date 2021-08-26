@@ -4,4 +4,6 @@ public interface LoanCalcRepository {
 
     int save();
 
+    void setRequestId(int requestId);
+
 }

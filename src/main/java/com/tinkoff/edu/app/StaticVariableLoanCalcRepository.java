@@ -7,6 +7,10 @@ public class StaticVariableLoanCalcRepository implements LoanCalcRepository {
 
     private static int requestId;
 
+    public void setRequestId(int requestId) {
+        this.requestId = requestId;
+    }
+
     public int save() {
         return ++requestId;
     }
