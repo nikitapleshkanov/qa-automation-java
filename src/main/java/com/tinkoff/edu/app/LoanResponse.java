@@ -7,7 +7,7 @@ public class LoanResponse {
 
     public LoanResponse(int requestId) {
         this.requestId = requestId;
-        this.isAccepted = LoanResponseType.DENIED;
+        this.isAccepted = LoanResponseType.DECLINED;
     }
 
     public LoanResponseType getIsAccepted() {
