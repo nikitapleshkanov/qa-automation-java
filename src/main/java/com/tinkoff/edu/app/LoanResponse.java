@@ -21,4 +21,9 @@ public class LoanResponse {
     public void setIsAccepted(LoanResponseType isAccepted) {
         this.isAccepted = isAccepted;
     }
+
+    public void printLoanResponseInfo() {
+        System.out.println("Your request number is: " + this.getRequestId() + "; "
+                + "Your request status is: " + this.getIsAccepted());
+    }
 }

@@ -22,21 +22,22 @@ public class CalculationsWithAllParamsService implements LoanCalcService {
     public LoanResponseType checkIfLoanAccepted(LoanRequest request) {
         if (request == null) {
             throw new IllegalArgumentException();
-        } else if (request.getLoanType().equals(LoanRequestType.PERSON) && request.getAmount() <= 10000.0 && request.getMonths() <= 12) {
+        } else if (request.getMonths() > 12 || request.getLoanType().equals(LoanRequestType.IP)) {
+            return LoanResponseType.DECLINED;
+        } else if (request.getLoanType().equals(LoanRequestType.PERSON)) {
             return LoanResponseType.APPROVED;
-        } else if (request.getLoanType().equals(LoanRequestType.PERSON) && request.getAmount() <= 10000.0 && request.getMonths() > 12) {
+        } else if (request.getLoanType().equals(LoanRequestType.OOO)) {
+            return checkIfLoanAcceptedForOOO(request);
+        }
+        return LoanResponseType.DECLINED;
+    }
+
+    public LoanResponseType checkIfLoanAcceptedForOOO(LoanRequest request) {
+        if (request.getAmount() <= 10000.0) {
             return LoanResponseType.DECLINED;
-        } else if (request.getLoanType().equals(LoanRequestType.PERSON) && request.getAmount() > 10000.0 && request.getMonths() > 12) {
-            return LoanResponseType.DECLINED;
-        } else if (request.getLoanType().equals(LoanRequestType.PERSON) && request.getAmount() > 10000.0 && request.getMonths() <= 12) {
+        } else if (request.getAmount() > 10000.0 && request.getMonths() < 12) {
             return LoanResponseType.APPROVED;
-        } else if (request.getLoanType().equals(LoanRequestType.OOO) && request.getAmount() <= 10000.0) {
-            return LoanResponseType.DECLINED;
-        } else if (request.getLoanType().equals(LoanRequestType.OOO) && request.getAmount() > 10000.0 && request.getMonths() < 12) {
-            return LoanResponseType.APPROVED;
-        } else if (request.getLoanType().equals(LoanRequestType.OOO) && request.getAmount() > 10000.0 && request.getMonths() >= 12) {
-            return LoanResponseType.DECLINED;
-        } else if (request.getLoanType().equals(LoanRequestType.IP)) {
+        } else if (request.getAmount() > 10000.0 && request.getMonths() == 12) {
             return LoanResponseType.DECLINED;
         }
         return LoanResponseType.DECLINED;
