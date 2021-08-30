@@ -155,7 +155,7 @@ public class AppTest {
     }
 
     @Test
-    @DisplayName("Проверка выброса сключения для заявки = null")
+    @DisplayName("Проверка выброса исключения для заявки = null")
     public void checkNullRequest() {
         repository = new VariableLoanCalcRepository();
         controller = new LoanCalcController(new CalculationsWithAllParamsService(repository));
