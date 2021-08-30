@@ -15,7 +15,7 @@ public class LoanCalcController {
 
     public LoanResponse createRequest(LoanRequest request) {
         LoanResponse loanResponse = service.createLoanRequest(request);
-        LoanCalcLogger.log(loanResponse.getRequestId());
+        LoanCalcLogger.log(loanResponse);
         return loanResponse;
     }
 

@@ -24,7 +24,6 @@ public class AppTest {
     public void checkApproveRequestForPerson1() {
         loanRequest = new LoanRequest(12, 10000, LoanRequestType.PERSON);
         LoanResponse loanResponse = buildController().createRequest(loanRequest);
-        loanResponse.printLoanResponseInfo();
         assertEquals(LoanResponseType.APPROVED, loanResponse.getIsAccepted());
     }
 
@@ -33,7 +32,6 @@ public class AppTest {
     public void checkApproveRequestForPerson2() {
         loanRequest = new LoanRequest(11, 10000, LoanRequestType.PERSON);
         LoanResponse loanResponse = buildController().createRequest(loanRequest);
-        loanResponse.printLoanResponseInfo();
         assertEquals(LoanResponseType.APPROVED, loanResponse.getIsAccepted());
     }
 
@@ -42,7 +40,6 @@ public class AppTest {
     public void checkApproveRequestForPerson3() {
         loanRequest = new LoanRequest(11, 9000, LoanRequestType.PERSON);
         LoanResponse loanResponse = buildController().createRequest(loanRequest);
-        loanResponse.printLoanResponseInfo();
         assertEquals(LoanResponseType.APPROVED, loanResponse.getIsAccepted());
     }
 
@@ -51,7 +48,6 @@ public class AppTest {
     public void checkApproveRequestForPerson4() {
         loanRequest = new LoanRequest(12, 9000, LoanRequestType.PERSON);
         LoanResponse loanResponse = buildController().createRequest(loanRequest);
-        loanResponse.printLoanResponseInfo();
         assertEquals(LoanResponseType.APPROVED, loanResponse.getIsAccepted());
     }
 
@@ -60,7 +56,6 @@ public class AppTest {
     public void checkDeclineRequestForPerson5() {
         loanRequest = new LoanRequest(14, 9000, LoanRequestType.PERSON);
         LoanResponse loanResponse = buildController().createRequest(loanRequest);
-        loanResponse.printLoanResponseInfo();
         assertEquals(LoanResponseType.DECLINED, loanResponse.getIsAccepted());
     }
 
@@ -69,7 +64,6 @@ public class AppTest {
     public void checkDeclineRequestForPerson6() {
         loanRequest = new LoanRequest(14, 10000, LoanRequestType.PERSON);
         LoanResponse loanResponse = buildController().createRequest(loanRequest);
-        loanResponse.printLoanResponseInfo();
         assertEquals(LoanResponseType.DECLINED, loanResponse.getIsAccepted());
     }
 
@@ -78,7 +72,6 @@ public class AppTest {
     public void checkDeclineRequestForPerson7() {
         loanRequest = new LoanRequest(14, 10005, LoanRequestType.PERSON);
         LoanResponse loanResponse = buildController().createRequest(loanRequest);
-        loanResponse.printLoanResponseInfo();
         assertEquals(LoanResponseType.DECLINED, loanResponse.getIsAccepted());
     }
 
@@ -87,7 +80,6 @@ public class AppTest {
     public void checkApproveRequestForPerson8() {
         loanRequest = new LoanRequest(12, 10005, LoanRequestType.PERSON);
         LoanResponse loanResponse = buildController().createRequest(loanRequest);
-        loanResponse.printLoanResponseInfo();
         assertEquals(LoanResponseType.APPROVED, loanResponse.getIsAccepted());
     }
 
@@ -96,7 +88,6 @@ public class AppTest {
     public void checkApproveRequestForPerson9() {
         loanRequest = new LoanRequest(10, 10005, LoanRequestType.PERSON);
         LoanResponse loanResponse = buildController().createRequest(loanRequest);
-        loanResponse.printLoanResponseInfo();
         assertEquals(LoanResponseType.APPROVED, loanResponse.getIsAccepted());
     }
 
@@ -105,7 +96,6 @@ public class AppTest {
     public void checkDeclineRequestForOOO1() {
         loanRequest = new LoanRequest(11, 8000, LoanRequestType.OOO);
         LoanResponse loanResponse = buildController().createRequest(loanRequest);
-        loanResponse.printLoanResponseInfo();
         assertEquals(LoanResponseType.DECLINED, loanResponse.getIsAccepted());
     }
 
@@ -114,7 +104,6 @@ public class AppTest {
     public void checkDeclineRequestForOOO2() {
         loanRequest = new LoanRequest(12, 8000, LoanRequestType.OOO);
         LoanResponse loanResponse = buildController().createRequest(loanRequest);
-        loanResponse.printLoanResponseInfo();
         assertEquals(LoanResponseType.DECLINED, loanResponse.getIsAccepted());
     }
 
@@ -123,7 +112,6 @@ public class AppTest {
     public void checkDeclineRequestForOOO3() {
         loanRequest = new LoanRequest(11, 10000, LoanRequestType.OOO);
         LoanResponse loanResponse = buildController().createRequest(loanRequest);
-        loanResponse.printLoanResponseInfo();
         assertEquals(LoanResponseType.DECLINED, loanResponse.getIsAccepted());
     }
 
@@ -132,7 +120,6 @@ public class AppTest {
     public void checkDeclineRequestForOOO4() {
         loanRequest = new LoanRequest(12, 10000, LoanRequestType.OOO);
         LoanResponse loanResponse = buildController().createRequest(loanRequest);
-        loanResponse.printLoanResponseInfo();
         assertEquals(LoanResponseType.DECLINED, loanResponse.getIsAccepted());
     }
 
@@ -141,7 +128,6 @@ public class AppTest {
     public void checkDeclineRequestForOOO5() {
         loanRequest = new LoanRequest(14, 8000, LoanRequestType.OOO);
         LoanResponse loanResponse = buildController().createRequest(loanRequest);
-        loanResponse.printLoanResponseInfo();
         assertEquals(LoanResponseType.DECLINED, loanResponse.getIsAccepted());
     }
 
@@ -150,7 +136,6 @@ public class AppTest {
     public void checkDeclineRequestForOOO6() {
         loanRequest = new LoanRequest(14, 10000, LoanRequestType.OOO);
         LoanResponse loanResponse = buildController().createRequest(loanRequest);
-        loanResponse.printLoanResponseInfo();
         assertEquals(LoanResponseType.DECLINED, loanResponse.getIsAccepted());
     }
 
@@ -159,7 +144,6 @@ public class AppTest {
     public void checkApproveRequestForOOO7() {
         loanRequest = new LoanRequest(11, 10005, LoanRequestType.OOO);
         LoanResponse loanResponse = buildController().createRequest(loanRequest);
-        loanResponse.printLoanResponseInfo();
         assertEquals(LoanResponseType.APPROVED, loanResponse.getIsAccepted());
     }
 
@@ -168,7 +152,6 @@ public class AppTest {
     public void checkDeclineRequestForOOO8() {
         loanRequest = new LoanRequest(12, 10015, LoanRequestType.OOO);
         LoanResponse loanResponse = buildController().createRequest(loanRequest);
-        loanResponse.printLoanResponseInfo();
         assertEquals(LoanResponseType.DECLINED, loanResponse.getIsAccepted());
     }
 
@@ -177,7 +160,6 @@ public class AppTest {
     public void checkDeclineRequestForOOO9() {
         loanRequest = new LoanRequest(14, 10015, LoanRequestType.OOO);
         LoanResponse loanResponse = buildController().createRequest(loanRequest);
-        loanResponse.printLoanResponseInfo();
         assertEquals(LoanResponseType.DECLINED, loanResponse.getIsAccepted());
     }
 
@@ -186,7 +168,6 @@ public class AppTest {
     public void checkDeclineRequestForIP() {
         loanRequest = new LoanRequest(12, 10000, LoanRequestType.IP);
         LoanResponse loanResponse = buildController().createRequest(loanRequest);
-        loanResponse.printLoanResponseInfo();
         assertEquals(LoanResponseType.DECLINED, loanResponse.getIsAccepted());
     }
 
@@ -197,7 +178,6 @@ public class AppTest {
         final int newId = 50;
         controller = new LoanCalcController(new CalculationsWithAllParamsService(new VariableLoanCalcRepository(newId)));
         LoanResponse loanResponse = controller.createRequest(loanRequest);
-        loanResponse.printLoanResponseInfo();
         finalCheck(LoanResponseType.DECLINED, newId + 1, loanResponse);
     }
 
