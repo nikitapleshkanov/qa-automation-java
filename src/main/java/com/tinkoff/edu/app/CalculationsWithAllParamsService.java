@@ -20,9 +20,27 @@ public class CalculationsWithAllParamsService implements LoanCalcService {
     }
 
     public LoanResponseType checkIfLoanAccepted(LoanRequest request) {
-        if (request.getAmount() > 0 && request.getMonths() < 24 && request.getLoanType().equals(LoanType.IP)) {
+        if (request == null) {
+            throw new IllegalArgumentException();
+        } else if (request.getMonths() > 12 || request.getLoanType().equals(LoanRequestType.IP)) {
+            return LoanResponseType.DECLINED;
+        } else if (request.getLoanType().equals(LoanRequestType.PERSON)) {
             return LoanResponseType.APPROVED;
-        } else return LoanResponseType.DENIED;
+        } else if (request.getLoanType().equals(LoanRequestType.OOO)) {
+            return checkIfLoanAcceptedForOOO(request);
+        }
+        return LoanResponseType.DECLINED;
+    }
+
+    public LoanResponseType checkIfLoanAcceptedForOOO(LoanRequest request) {
+        if (request.getAmount() <= 10000.0) {
+            return LoanResponseType.DECLINED;
+        } else if (request.getAmount() > 10000.0 && request.getMonths() < 12) {
+            return LoanResponseType.APPROVED;
+        } else if (request.getAmount() > 10000.0 && request.getMonths() == 12) {
+            return LoanResponseType.DECLINED;
+        }
+        return LoanResponseType.DECLINED;
     }
 
 }

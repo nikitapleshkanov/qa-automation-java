@@ -3,55 +3,221 @@ package com.tinkoff.edu;
 
 import com.tinkoff.edu.app.CalculationsWithAllParamsService;
 import com.tinkoff.edu.app.LoanCalcController;
-import com.tinkoff.edu.app.LoanCalcRepository;
 import com.tinkoff.edu.app.LoanRequest;
+import com.tinkoff.edu.app.LoanRequestType;
 import com.tinkoff.edu.app.LoanResponse;
 import com.tinkoff.edu.app.LoanResponseType;
-import com.tinkoff.edu.app.LoanType;
 import com.tinkoff.edu.app.VariableLoanCalcRepository;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class AppTest {
     private LoanRequest loanRequest;
     private LoanCalcController controller;
-    private LoanCalcRepository repository;
 
-    @BeforeEach
-    public void init() {
-        loanRequest = new LoanRequest(10, 1000, LoanType.IP);
+
+    @Test
+    @DisplayName("Проверка одобрения заявки: loanType = PERSON, amount = 10000, months = 12")
+    public void checkApproveRequestForPerson1() {
+        loanRequest = new LoanRequest(12, 10000, LoanRequestType.PERSON);
+        LoanResponse loanResponse = buildController().createRequest(loanRequest);
+        assertEquals(LoanResponseType.APPROVED, loanResponse.getIsAccepted());
     }
 
     @Test
-    @DisplayName("Проверка одобрения заявки")
-    public void shouldAnswerWithTrue() {
-        repository = new VariableLoanCalcRepository();
-        controller = new LoanCalcController(new CalculationsWithAllParamsService(repository));
-        LoanResponse loanResponse = controller.createRequest(loanRequest);
-        System.out.println("Your request number is: " + loanResponse.getRequestId() + "; "
-                + "Your request status is: " + loanResponse.getIsAccepted());
-        Assertions.assertEquals(LoanResponseType.APPROVED, loanResponse.getIsAccepted());
-        Assertions.assertEquals(1, loanResponse.getRequestId());
-        finalCheck(LoanResponseType.APPROVED, 1, loanResponse);
+    @DisplayName("Проверка одобрения заявки: loanType = PERSON, amount = 10000, months < 12")
+    public void checkApproveRequestForPerson2() {
+        loanRequest = new LoanRequest(11, 10000, LoanRequestType.PERSON);
+        LoanResponse loanResponse = buildController().createRequest(loanRequest);
+        assertEquals(LoanResponseType.APPROVED, loanResponse.getIsAccepted());
     }
 
     @Test
-    @DisplayName("Проверка одобрения заявки с произвольным id")
-    public void initCustomRequestId() {
+    @DisplayName("Проверка одобрения заявки: loanType = PERSON, amount < 10000, months < 12")
+    public void checkApproveRequestForPerson3() {
+        loanRequest = new LoanRequest(11, 9000, LoanRequestType.PERSON);
+        LoanResponse loanResponse = buildController().createRequest(loanRequest);
+        assertEquals(LoanResponseType.APPROVED, loanResponse.getIsAccepted());
+    }
+
+    @Test
+    @DisplayName("Проверка одобрения заявки: loanType = PERSON, amount < 10000, months = 12")
+    public void checkApproveRequestForPerson4() {
+        loanRequest = new LoanRequest(12, 9000, LoanRequestType.PERSON);
+        LoanResponse loanResponse = buildController().createRequest(loanRequest);
+        assertEquals(LoanResponseType.APPROVED, loanResponse.getIsAccepted());
+    }
+
+    @Test
+    @DisplayName("Проверка отклонения заявки: loanType = PERSON, amount < 10000, months > 12")
+    public void checkDeclineRequestForPerson5() {
+        loanRequest = new LoanRequest(14, 9000, LoanRequestType.PERSON);
+        LoanResponse loanResponse = buildController().createRequest(loanRequest);
+        assertEquals(LoanResponseType.DECLINED, loanResponse.getIsAccepted());
+    }
+
+    @Test
+    @DisplayName("Проверка отклонения заявки: loanType = PERSON, amount = 10000, months > 12")
+    public void checkDeclineRequestForPerson6() {
+        loanRequest = new LoanRequest(14, 10000, LoanRequestType.PERSON);
+        LoanResponse loanResponse = buildController().createRequest(loanRequest);
+        assertEquals(LoanResponseType.DECLINED, loanResponse.getIsAccepted());
+    }
+
+    @Test
+    @DisplayName("Проверка отклонения заявки: loanType = PERSON, amount > 10000, months > 12")
+    public void checkDeclineRequestForPerson7() {
+        loanRequest = new LoanRequest(14, 10005, LoanRequestType.PERSON);
+        LoanResponse loanResponse = buildController().createRequest(loanRequest);
+        assertEquals(LoanResponseType.DECLINED, loanResponse.getIsAccepted());
+    }
+
+    @Test
+    @DisplayName("Проверка одобрения заявки: loanType = PERSON, amount > 10000, months = 12")
+    public void checkApproveRequestForPerson8() {
+        loanRequest = new LoanRequest(12, 10005, LoanRequestType.PERSON);
+        LoanResponse loanResponse = buildController().createRequest(loanRequest);
+        assertEquals(LoanResponseType.APPROVED, loanResponse.getIsAccepted());
+    }
+
+    @Test
+    @DisplayName("Проверка одобрения заявки: loanType = PERSON, amount > 10000, months < 12")
+    public void checkApproveRequestForPerson9() {
+        loanRequest = new LoanRequest(10, 10005, LoanRequestType.PERSON);
+        LoanResponse loanResponse = buildController().createRequest(loanRequest);
+        assertEquals(LoanResponseType.APPROVED, loanResponse.getIsAccepted());
+    }
+
+    @Test
+    @DisplayName("Проверка отклонения заявки: loanType = OOO, amount < 10000, months < 12")
+    public void checkDeclineRequestForOOO1() {
+        loanRequest = new LoanRequest(11, 8000, LoanRequestType.OOO);
+        LoanResponse loanResponse = buildController().createRequest(loanRequest);
+        assertEquals(LoanResponseType.DECLINED, loanResponse.getIsAccepted());
+    }
+
+    @Test
+    @DisplayName("Проверка отклонения заявки: loanType = OOO, amount < 10000, months = 12")
+    public void checkDeclineRequestForOOO2() {
+        loanRequest = new LoanRequest(12, 8000, LoanRequestType.OOO);
+        LoanResponse loanResponse = buildController().createRequest(loanRequest);
+        assertEquals(LoanResponseType.DECLINED, loanResponse.getIsAccepted());
+    }
+
+    @Test
+    @DisplayName("Проверка отклонения заявки: loanType = OOO, amount = 10000, months < 12")
+    public void checkDeclineRequestForOOO3() {
+        loanRequest = new LoanRequest(11, 10000, LoanRequestType.OOO);
+        LoanResponse loanResponse = buildController().createRequest(loanRequest);
+        assertEquals(LoanResponseType.DECLINED, loanResponse.getIsAccepted());
+    }
+
+    @Test
+    @DisplayName("Проверка отклонения заявки: loanType = OOO, amount = 10000, months = 12")
+    public void checkDeclineRequestForOOO4() {
+        loanRequest = new LoanRequest(12, 10000, LoanRequestType.OOO);
+        LoanResponse loanResponse = buildController().createRequest(loanRequest);
+        assertEquals(LoanResponseType.DECLINED, loanResponse.getIsAccepted());
+    }
+
+    @Test
+    @DisplayName("Проверка отклонения заявки: loanType = OOO, amount < 10000,  months > 12")
+    public void checkDeclineRequestForOOO5() {
+        loanRequest = new LoanRequest(14, 8000, LoanRequestType.OOO);
+        LoanResponse loanResponse = buildController().createRequest(loanRequest);
+        assertEquals(LoanResponseType.DECLINED, loanResponse.getIsAccepted());
+    }
+
+    @Test
+    @DisplayName("Проверка отклонения заявки: loanType = OOO, amount = 10000,  months > 12")
+    public void checkDeclineRequestForOOO6() {
+        loanRequest = new LoanRequest(14, 10000, LoanRequestType.OOO);
+        LoanResponse loanResponse = buildController().createRequest(loanRequest);
+        assertEquals(LoanResponseType.DECLINED, loanResponse.getIsAccepted());
+    }
+
+    @Test
+    @DisplayName("Проверка одобрения заявки: loanType = OOO, amount > 10000, months < 12")
+    public void checkApproveRequestForOOO7() {
+        loanRequest = new LoanRequest(11, 10005, LoanRequestType.OOO);
+        LoanResponse loanResponse = buildController().createRequest(loanRequest);
+        assertEquals(LoanResponseType.APPROVED, loanResponse.getIsAccepted());
+    }
+
+    @Test
+    @DisplayName("Проверка отклонения заявки: loanType = OOO, amount > 10000, months = 12")
+    public void checkDeclineRequestForOOO8() {
+        loanRequest = new LoanRequest(12, 10015, LoanRequestType.OOO);
+        LoanResponse loanResponse = buildController().createRequest(loanRequest);
+        assertEquals(LoanResponseType.DECLINED, loanResponse.getIsAccepted());
+    }
+
+    @Test
+    @DisplayName("Проверка отклонения заявки: loanType = OOO, amount > 10000, months > 12")
+    public void checkDeclineRequestForOOO9() {
+        loanRequest = new LoanRequest(14, 10015, LoanRequestType.OOO);
+        LoanResponse loanResponse = buildController().createRequest(loanRequest);
+        assertEquals(LoanResponseType.DECLINED, loanResponse.getIsAccepted());
+    }
+
+    @Test
+    @DisplayName("Проверка отклонения заявки: loanType = IP")
+    public void checkDeclineRequestForIP() {
+        loanRequest = new LoanRequest(12, 10000, LoanRequestType.IP);
+        LoanResponse loanResponse = buildController().createRequest(loanRequest);
+        assertEquals(LoanResponseType.DECLINED, loanResponse.getIsAccepted());
+    }
+
+    @Test
+    @DisplayName("Проверка отклонения заявки с произвольным id")
+    public void initDeclineRequestId() {
+        loanRequest = new LoanRequest(10, 1000, LoanRequestType.IP);
         final int newId = 50;
-        repository = new VariableLoanCalcRepository(newId);
-        controller = new LoanCalcController(new CalculationsWithAllParamsService(repository));
+        controller = new LoanCalcController(new CalculationsWithAllParamsService(new VariableLoanCalcRepository(newId)));
         LoanResponse loanResponse = controller.createRequest(loanRequest);
-        System.out.println("Your request number is: " + loanResponse.getRequestId() + "; "
-                + "Your request status is: " + loanResponse.getIsAccepted());
-        finalCheck(LoanResponseType.APPROVED, newId + 1, loanResponse);
+        finalCheck(LoanResponseType.DECLINED, newId + 1, loanResponse);
+    }
+
+    @Test
+    @DisplayName("Проверка выброса исключения для заявки = null")
+    public void checkNullRequest() {
+        try {
+            buildController().createRequest(null);
+            fail("No exception caught");
+        } catch (IllegalArgumentException exception) {
+        }
+    }
+
+    @Test
+    @DisplayName("Проверка выброса исключения для заявки с amount <= 0 ")
+    public void shouldGetErrorWhenApplyZeroOrNegativeAmountRequest() {
+        try {
+            loanRequest = new LoanRequest(12, 0, LoanRequestType.IP);
+            fail("No exception caught");
+        } catch (IllegalArgumentException exception) {
+        }
+    }
+
+    @Test
+    @DisplayName("Проверка выброса исключения для заявки с months <= 0 ")
+    public void shouldGetErrorWhenApplyZeroOrNegativeMonthsRequest() {
+        try {
+            loanRequest = new LoanRequest(-10, 10000, LoanRequestType.IP);
+            fail("No exception caught");
+        } catch (IllegalArgumentException exception) {
+        }
     }
 
     private void finalCheck(LoanResponseType expectedLoanType, int expectedId, LoanResponse loanResponse) {
-        Assertions.assertEquals(expectedLoanType, loanResponse.getIsAccepted());
-        Assertions.assertEquals(expectedId, loanResponse.getRequestId());
+        assertEquals(expectedLoanType, loanResponse.getIsAccepted());
+        assertEquals(expectedId, loanResponse.getRequestId());
+    }
+
+    private LoanCalcController buildController() {
+        return new LoanCalcController(new CalculationsWithAllParamsService(new VariableLoanCalcRepository()));
     }
 
 }

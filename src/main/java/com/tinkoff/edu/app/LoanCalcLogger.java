@@ -6,7 +6,7 @@ package com.tinkoff.edu.app;
  */
 public class LoanCalcLogger {
 
-    public static void log(int requestId) {
-        System.out.println("Logger working with loan number: " + requestId);
+    public static void log(LoanResponse loanResponse) {
+        loanResponse.printLoanResponseInfo();
     }
 }
