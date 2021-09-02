@@ -1,11 +1,15 @@
-package com.tinkoff.edu.app;
+package com.tinkoff.edu.app.model;
 
-public class LoanResponse {
+import com.tinkoff.edu.app.enums.LoanResponseType;
+
+import java.util.UUID;
+
+public class UuidLoanResponse extends AbstractLoanResponse {
 
     private LoanResponseType isAccepted;
-    private final int requestId;
+    private final UUID requestId;
 
-    public LoanResponse(int requestId) {
+    public UuidLoanResponse(UUID requestId) {
         this.requestId = requestId;
         this.isAccepted = LoanResponseType.DECLINED;
     }
@@ -14,7 +18,7 @@ public class LoanResponse {
         return isAccepted;
     }
 
-    public int getRequestId() {
+    public UUID getRequestId() {
         return requestId;
     }
 
@@ -26,4 +30,5 @@ public class LoanResponse {
         System.out.println("Your request number is: " + this.getRequestId() + "; "
                 + "Your request status is: " + this.getIsAccepted());
     }
+
 }
