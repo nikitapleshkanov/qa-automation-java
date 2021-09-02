@@ -11,7 +11,7 @@ public class UuidLoanCalсRepository extends AbstractLoanCalcRepository {
     @Override
     public AbstractLoanResponse save(AbstractLoanRequest request) {
         UUID requestUuid = UUID.randomUUID();
-        UuidLoanResponse response = new UuidLoanResponse(requestUuid);
+        UuidLoanResponse response = new UuidLoanResponse(UUID.randomUUID());
         return response;
     }
 
