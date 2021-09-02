@@ -21,7 +21,7 @@ public class VariableLoanCalcRepository extends AbstractLoanCalcRepository {
     @Override
     public IntIdLoanResponse save(AbstractLoanRequest request) {
         requestId++;
-        IntIdLoanResponse response = new IntIdLoanResponse(requestId);
+        IntIdLoanResponse response = new IntIdLoanResponse(requestId++);
         return response;
     }
 }
