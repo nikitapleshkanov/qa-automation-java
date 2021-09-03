@@ -4,7 +4,7 @@ import com.tinkoff.edu.app.enums.LoanResponseType;
 
 import java.util.UUID;
 
-public class UuidLoanResponse extends AbstractLoanResponse {
+public class UuidLoanResponse {
 
     private LoanResponseType isAccepted;
     private final UUID requestId;

@@ -1,13 +1,19 @@
 package com.tinkoff.edu.app.service;
 
 import com.tinkoff.edu.app.enums.LoanResponseType;
-import com.tinkoff.edu.app.model.AbstractLoanRequest;
-import com.tinkoff.edu.app.model.AbstractLoanResponse;
+import com.tinkoff.edu.app.model.UuidLoanRequest;
+import com.tinkoff.edu.app.model.UuidLoanResponse;
+
+import java.util.UUID;
 
 public interface LoanCalcService {
 
-    AbstractLoanResponse createLoanRequest(AbstractLoanRequest request);
+    UuidLoanResponse createLoanRequest(UuidLoanRequest request);
 
-    LoanResponseType checkIfLoanAccepted(AbstractLoanRequest request);
+    LoanResponseType checkIfLoanAccepted(UuidLoanRequest request);
+
+    LoanResponseType getRequestById(UUID uuid);
+
+    void setStatusRequestById(UUID uuid, LoanResponseType status);
 
 }

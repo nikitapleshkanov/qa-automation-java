@@ -1,8 +1,8 @@
 package com.tinkoff.edu.app.controller;
 
 import com.tinkoff.edu.app.logger.LoanCalcLogger;
-import com.tinkoff.edu.app.model.AbstractLoanRequest;
-import com.tinkoff.edu.app.model.AbstractLoanResponse;
+import com.tinkoff.edu.app.model.UuidLoanRequest;
+import com.tinkoff.edu.app.model.UuidLoanResponse;
 import com.tinkoff.edu.app.service.LoanCalcService;
 
 /**
@@ -18,8 +18,8 @@ public class LoanCalcController {
 
     }
 
-    public AbstractLoanResponse createRequest(AbstractLoanRequest request) {
-        AbstractLoanResponse loanResponse = service.createLoanRequest(request);
+    public UuidLoanResponse createRequest(UuidLoanRequest request) {
+        UuidLoanResponse loanResponse = service.createLoanRequest(request);
         LoanCalcLogger.log(loanResponse);
         return loanResponse;
     }
