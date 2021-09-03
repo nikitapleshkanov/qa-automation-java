@@ -8,7 +8,6 @@ import com.tinkoff.edu.app.service.LoanCalcService;
 /**
  * Describe working with api
  */
-
 public class LoanCalcController {
 
     private LoanCalcService service;

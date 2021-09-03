@@ -11,4 +11,5 @@ public class LoanCalcLogger {
     public static void log(UuidLoanResponse loanResponse) {
         loanResponse.printLoanResponseInfo();
     }
+
 }

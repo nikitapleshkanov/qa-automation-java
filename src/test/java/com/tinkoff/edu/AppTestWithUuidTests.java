@@ -1,6 +1,5 @@
 package com.tinkoff.edu;
 
-
 import com.tinkoff.edu.app.controller.LoanCalcController;
 import com.tinkoff.edu.app.enums.LoanRequestType;
 import com.tinkoff.edu.app.enums.LoanResponseType;
@@ -25,7 +24,6 @@ public class AppTestWithUuidTests {
     private LoanCalcRepository repository = new VariableLoanCalcRepository();
     private LoanCalcService service = new CalculationsWithAllParamsService(repository);
     private LoanCalcController controller = new LoanCalcController(service);
-
 
     @Test
     @DisplayName("Проверка одобрения заявки: loanType = PERSON, amount = 10000, months = 12")

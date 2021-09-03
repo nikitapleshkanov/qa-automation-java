@@ -18,7 +18,6 @@ public class VariableLoanCalcRepository implements LoanCalcRepository {
         this.responsesArray = new ArrayList<>();
     }
 
-
     public UUID save() {
         return UUID.randomUUID();
     }
