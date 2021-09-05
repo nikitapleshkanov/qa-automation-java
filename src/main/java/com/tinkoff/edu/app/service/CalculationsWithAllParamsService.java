@@ -43,13 +43,12 @@ public class CalculationsWithAllParamsService implements LoanCalcService {
         repository.setStatusById(uuid, status);
     }
 
-    public LoanResponseType checkIfLoanAccepted(UuidLoanRequest request) {
+    public LoanResponseType checkIfLoanAccepted(UuidLoanRequest request) throws IllegalArgumentException {
         if (request == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Значение request передано = null");
         } else if (request.getMonths() > 12) {
             return LoanResponseType.DECLINED;
         }
-
         switch (request.getLoanType()) {
             case OOO:
                 return checkIfLoanAcceptedForOOO(request);

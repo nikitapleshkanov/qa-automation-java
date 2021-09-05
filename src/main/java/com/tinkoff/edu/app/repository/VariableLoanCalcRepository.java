@@ -37,7 +37,7 @@ public class VariableLoanCalcRepository implements LoanCalcRepository {
                 return;
             }
         }
-        throw new NoSuchElementException("Элемент с полученным id не найден");
+        throw new NoSuchElementException("Элемент массива с полученным id не найден");
     }
 
 }

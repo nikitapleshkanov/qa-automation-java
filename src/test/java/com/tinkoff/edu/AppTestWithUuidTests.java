@@ -3,6 +3,7 @@ package com.tinkoff.edu;
 import com.tinkoff.edu.app.controller.LoanCalcController;
 import com.tinkoff.edu.app.enums.LoanRequestType;
 import com.tinkoff.edu.app.enums.LoanResponseType;
+import com.tinkoff.edu.app.exceptions.RequestException;
 import com.tinkoff.edu.app.model.UuidLoanRequest;
 import com.tinkoff.edu.app.model.UuidLoanResponse;
 import com.tinkoff.edu.app.repository.LoanCalcRepository;
@@ -16,7 +17,8 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AppTestWithUuidTests {
 
@@ -180,31 +182,31 @@ public class AppTestWithUuidTests {
     @Test
     @DisplayName("Проверка выброса исключения для заявки = null")
     public void checkNullRequest() {
-        try {
-            controller.createRequest(null);
-            fail("No exception caught");
-        } catch (IllegalArgumentException exception) {
-        }
+        final IllegalArgumentException thrown = assertThrows(
+                IllegalArgumentException.class,
+                () -> controller.createRequest(null)
+        );
+        assertTrue(thrown.getMessage().equals("Значение request передано = null"));
     }
 
     @Test
     @DisplayName("Проверка выброса исключения для заявки с amount <= 0 ")
     public void shouldGetErrorWhenApplyZeroOrNegativeAmountRequest() {
-        try {
-            loanRequest = new UuidLoanRequest(12, 0, LoanRequestType.IP, "Иванов Иван Иванович");
-            fail("No exception caught");
-        } catch (IllegalArgumentException exception) {
-        }
+        final IllegalArgumentException thrown = assertThrows(
+                IllegalArgumentException.class,
+                () -> new UuidLoanRequest(12, 0, LoanRequestType.IP, "Иванов Иван Иванович")
+        );
+        assertTrue(thrown.getMessage().equals("Указано значение amount <= 0"));
     }
 
     @Test
     @DisplayName("Проверка выброса исключения для заявки с months <= 0 ")
     public void shouldGetErrorWhenApplyZeroOrNegativeMonthsRequest() {
-        try {
-            loanRequest = new UuidLoanRequest(-10, 10000, LoanRequestType.IP, "Иванов Иван Иванович");
-            fail("No exception caught");
-        } catch (IllegalArgumentException exception) {
-        }
+        final IllegalArgumentException thrown = assertThrows(
+                IllegalArgumentException.class,
+                () -> new UuidLoanRequest(-10, 10000, LoanRequestType.IP, "Иванов Иван Иванович")
+        );
+        assertTrue(thrown.getMessage().equals("Указано значение month <= 0"));
     }
 
     @Test
@@ -229,21 +231,101 @@ public class AppTestWithUuidTests {
     @Test
     @DisplayName("Проверка выброса exception при попытке получить статус несуществующей заявки")
     public void checkGettingExceptionForGettingNotExistRequest() {
-        try {
-            service.getRequestById(UUID.randomUUID());
-            fail("No exception caught");
-        } catch (NoSuchElementException exception) {
-        }
+        final NoSuchElementException thrown = assertThrows(
+                NoSuchElementException.class,
+                () -> service.getRequestById(UUID.randomUUID())
+        );
+        assertTrue(thrown.getMessage().equals("Элемент с полученным id не найден"));
     }
 
     @Test
     @DisplayName("Проверка выброса exception при попытке изменить статус несуществующей заявки")
     public void checkGettingExceptionForChangingNotExistRequest() {
-        try {
-            service.setStatusRequestById(UUID.randomUUID(), LoanResponseType.APPROVED);
-            fail("No exception caught");
-        } catch (NoSuchElementException exception) {
-        }
+        final NoSuchElementException thrown = assertThrows(
+                NoSuchElementException.class,
+                () -> service.setStatusRequestById(UUID.randomUUID(), LoanResponseType.APPROVED)
+        );
+        assertTrue(thrown.getMessage().equals("Элемент массива с полученным id не найден"));
+    }
+
+    @Test
+    @DisplayName("Проверка выброса exception при попытке указать пустую строку в поле name")
+    public void checkGettingExceptionForUsingEmptyNameStringRequest() {
+        final IllegalArgumentException thrown = assertThrows(
+                IllegalArgumentException.class,
+                () -> new UuidLoanRequest(12, 10000, LoanRequestType.IP, "")
+        );
+        assertTrue(thrown.getMessage().equals("Значение ФИО указано пустое или null"));
+    }
+
+    @Test
+    @DisplayName("Проверка выброса exception при попытке указать name = null")
+    public void checkGettingExceptionForUsingNullNameRequest() {
+        final IllegalArgumentException thrown = assertThrows(
+                IllegalArgumentException.class,
+                () -> new UuidLoanRequest(12, 10000, LoanRequestType.IP, null)
+        );
+        assertTrue(thrown.getMessage().equals("Значение ФИО указано пустое или null"));
+    }
+
+    @Test
+    @DisplayName("Проверка выброса exception при попытке указать loanType = null")
+    public void checkGettingExceptionForUsingNullLoanTypeRequest() {
+        final IllegalArgumentException thrown = assertThrows(
+                IllegalArgumentException.class,
+                () -> new UuidLoanRequest(12, 10000, null, "Иванов Иван Иванович")
+        );
+        assertTrue(thrown.getMessage().equals("Значение типа заявки указано null"));
+    }
+
+    @Test
+    @DisplayName("Проверка выброса exception при попытке указать ФИО короче 10 символов")
+    public void checkGettingExceptionForUsingShortNameRequest() {
+        final RequestException thrown = assertThrows(
+                RequestException.class,
+                () -> new UuidLoanRequest(12, 10000, LoanRequestType.IP, "Ива")
+        );
+        assertTrue(thrown.getMessage().equals("Некорректная длина ФИО в заявке"));
+    }
+
+    @Test
+    @DisplayName("Проверка выброса exception при попытке указать ФИО длиннее 100 символов")
+    public void checkGettingExceptionForUsingLongNameRequest() {
+        final RequestException thrown = assertThrows(
+                RequestException.class,
+                () -> new UuidLoanRequest(12, 10000, LoanRequestType.IP, "Ивааанннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннн")
+        );
+        assertTrue(thrown.getMessage().equals("Некорректная длина ФИО в заявке"));
+    }
+
+    @Test
+    @DisplayName("Проверка выброса exception при попытке указать количество месяцев > 100")
+    public void checkGettingExceptionForUsingHighMonthValueRequest() {
+        final RequestException thrown = assertThrows(
+                RequestException.class,
+                () -> new UuidLoanRequest(101, 10000, LoanRequestType.IP, "Иванов Иван Иванович")
+        );
+        assertTrue(thrown.getMessage().equals("Некорректнаое число месяцев в заявке"));
+    }
+
+    @Test
+    @DisplayName("Проверка выброса exception при попытке указать значение суммы < 0.01")
+    public void checkGettingExceptionForUsingLowAmountValueRequest() {
+        final RequestException thrown = assertThrows(
+                RequestException.class,
+                () -> new UuidLoanRequest(12, 0.009, LoanRequestType.IP, "Иванов Иван Иванович")
+        );
+        assertTrue(thrown.getMessage().equals("Некорректная сумма в заявке"));
+    }
+
+    @Test
+    @DisplayName("Проверка выброса exception при попытке указать значение суммы > 999999.99")
+    public void checkGettingExceptionForUsingHighAmountValueRequest() {
+        final RequestException thrown = assertThrows(
+                RequestException.class,
+                () -> new UuidLoanRequest(12, 1000000, LoanRequestType.IP, "Иванов Иван Иванович")
+        );
+        assertTrue(thrown.getMessage().equals("Некорректная сумма в заявке"));
     }
 
 }
