@@ -12,15 +12,40 @@ import com.tinkoff.edu.app.service.CalculationsWithAllParamsService;
 import com.tinkoff.edu.app.service.LoanCalcService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.NoSuchElementException;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AppTestWithUuidTests {
+
+    static Stream<Arguments> testNameDataProvider() {
+        return Stream.of(
+                Arguments.arguments("значение ФИО указано короче 10 символов", "Ива"),
+                Arguments.arguments("значение ФИО указано длиннее 100 символов", "Ивааанннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннн")
+        );
+    }
+
+    static Stream<Arguments> testEmptyOrNullNameDataProvider() {
+        return Stream.of(
+                Arguments.arguments("указано пустое значение ФИО ", ""),
+                Arguments.arguments("указано значение ФИО = null", null)
+        );
+    }
+
+    static Stream<Arguments> testAmountDataProvider() {
+        return Stream.of(
+                Arguments.arguments("значение суммы < 0.01", 0.009),
+                Arguments.arguments("значение суммы > 999999.99", 1000000.0)
+        );
+    }
 
     private UuidLoanRequest loanRequest;
     private LoanCalcRepository repository = new VariableLoanCalcRepository();
@@ -248,22 +273,12 @@ public class AppTestWithUuidTests {
         assertTrue(thrown.getMessage().equals("Элемент массива с полученным id не найден"));
     }
 
-    @Test
-    @DisplayName("Проверка выброса exception при попытке указать пустую строку в поле name")
-    public void checkGettingExceptionForUsingEmptyNameStringRequest() {
+    @ParameterizedTest(name = "{index}: Проверка выброса exception: {0}")
+    @MethodSource("testEmptyOrNullNameDataProvider")
+    public void checkGettingExceptionForUsingWrongEmptyNameRequest(String title, String name) {
         final IllegalArgumentException thrown = assertThrows(
                 IllegalArgumentException.class,
-                () -> new UuidLoanRequest(12, 10000, LoanRequestType.IP, "")
-        );
-        assertTrue(thrown.getMessage().equals("Значение ФИО указано пустое или null"));
-    }
-
-    @Test
-    @DisplayName("Проверка выброса exception при попытке указать name = null")
-    public void checkGettingExceptionForUsingNullNameRequest() {
-        final IllegalArgumentException thrown = assertThrows(
-                IllegalArgumentException.class,
-                () -> new UuidLoanRequest(12, 10000, LoanRequestType.IP, null)
+                () -> new UuidLoanRequest(12, 10000, LoanRequestType.IP, name)
         );
         assertTrue(thrown.getMessage().equals("Значение ФИО указано пустое или null"));
     }
@@ -278,22 +293,12 @@ public class AppTestWithUuidTests {
         assertTrue(thrown.getMessage().equals("Значение типа заявки указано null"));
     }
 
-    @Test
-    @DisplayName("Проверка выброса exception при попытке указать ФИО короче 10 символов")
-    public void checkGettingExceptionForUsingShortNameRequest() {
+    @ParameterizedTest(name = "{index}: Проверка выброса exception: {0}")
+    @MethodSource("testNameDataProvider")
+    public void checkGettingExceptionForUsingWrongNameRequest(String title, String name) {
         final RequestException thrown = assertThrows(
                 RequestException.class,
-                () -> new UuidLoanRequest(12, 10000, LoanRequestType.IP, "Ива")
-        );
-        assertTrue(thrown.getMessage().equals("Некорректная длина ФИО в заявке"));
-    }
-
-    @Test
-    @DisplayName("Проверка выброса exception при попытке указать ФИО длиннее 100 символов")
-    public void checkGettingExceptionForUsingLongNameRequest() {
-        final RequestException thrown = assertThrows(
-                RequestException.class,
-                () -> new UuidLoanRequest(12, 10000, LoanRequestType.IP, "Ивааанннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннннн")
+                () -> new UuidLoanRequest(12, 10000, LoanRequestType.IP, name)
         );
         assertTrue(thrown.getMessage().equals("Некорректная длина ФИО в заявке"));
     }
@@ -308,22 +313,12 @@ public class AppTestWithUuidTests {
         assertTrue(thrown.getMessage().equals("Некорректнаое число месяцев в заявке"));
     }
 
-    @Test
-    @DisplayName("Проверка выброса exception при попытке указать значение суммы < 0.01")
-    public void checkGettingExceptionForUsingLowAmountValueRequest() {
+    @ParameterizedTest(name = "{index}: Проверка выброса exception: {0}")
+    @MethodSource("testAmountDataProvider")
+    public void checkGettingExceptionForUsingWrongAmountRequest(String title, Double amount) {
         final RequestException thrown = assertThrows(
                 RequestException.class,
-                () -> new UuidLoanRequest(12, 0.009, LoanRequestType.IP, "Иванов Иван Иванович")
-        );
-        assertTrue(thrown.getMessage().equals("Некорректная сумма в заявке"));
-    }
-
-    @Test
-    @DisplayName("Проверка выброса exception при попытке указать значение суммы > 999999.99")
-    public void checkGettingExceptionForUsingHighAmountValueRequest() {
-        final RequestException thrown = assertThrows(
-                RequestException.class,
-                () -> new UuidLoanRequest(12, 1000000, LoanRequestType.IP, "Иванов Иван Иванович")
+                () -> new UuidLoanRequest(12, amount, LoanRequestType.IP, "Иванов Иван Иванович")
         );
         assertTrue(thrown.getMessage().equals("Некорректная сумма в заявке"));
     }
