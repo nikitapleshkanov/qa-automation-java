@@ -17,7 +17,7 @@ public class LoanCalcController {
 
     }
 
-    public UuidLoanResponse createRequest(UuidLoanRequest request) {
+    public UuidLoanResponse createRequest(UuidLoanRequest request) throws IllegalArgumentException {
         UuidLoanResponse loanResponse = service.createLoanRequest(request);
         LoanCalcLogger.log(loanResponse);
         return loanResponse;
