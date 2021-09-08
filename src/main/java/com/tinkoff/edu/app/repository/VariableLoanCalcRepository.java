@@ -3,7 +3,7 @@ package com.tinkoff.edu.app.repository;
 import com.tinkoff.edu.app.enums.LoanResponseType;
 import com.tinkoff.edu.app.model.UuidLoanResponse;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
@@ -12,10 +12,10 @@ import java.util.UUID;
  */
 public class VariableLoanCalcRepository implements LoanCalcRepository {
 
-    private ArrayList<UuidLoanResponse> responsesArray;
+    private HashMap<UUID, UuidLoanResponse> responsesArray;
 
     public VariableLoanCalcRepository() {
-        this.responsesArray = new ArrayList<>();
+        this.responsesArray = new HashMap<>();
     }
 
     public UUID save() {
@@ -23,21 +23,19 @@ public class VariableLoanCalcRepository implements LoanCalcRepository {
     }
 
     public void saveResponse(UuidLoanResponse response) {
-        responsesArray.add(response);
+        responsesArray.put(response.getRequestId(), response);
     }
 
-    public ArrayList<UuidLoanResponse> getResponses() {
+    public HashMap<UUID, UuidLoanResponse> getResponses() {
         return responsesArray;
     }
 
     public void setStatusById(UUID uuid, LoanResponseType status) throws NoSuchElementException {
-        for (UuidLoanResponse object : responsesArray) {
-            if (object.getRequestId().equals(uuid)) {
-                object.setIsAccepted(status);
-                return;
-            }
+        try {
+            responsesArray.get(uuid).setIsAccepted(status);
+        } catch (NullPointerException e) {
+            throw new NoSuchElementException("Элемент массива с полученным id не найден");
         }
-        throw new NoSuchElementException("Элемент массива с полученным id не найден");
     }
 
 }

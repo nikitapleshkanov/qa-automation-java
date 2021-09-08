@@ -16,6 +16,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -321,6 +323,22 @@ public class AppTestWithUuidTests {
                 () -> new UuidLoanRequest(12, amount, LoanRequestType.IP, "Иванов Иван Иванович")
         );
         assertTrue(thrown.getMessage().equals("Некорректная сумма в заявке"));
+    }
+
+    @Test
+    @DisplayName("Проверка одобрения заявки: loanType = PERSON, amount > 10000, months < 12")
+    public void checkGettingAllOOORequests() {
+        ArrayList<UuidLoanResponse> containsList = new ArrayList<>();
+        loanRequest = new UuidLoanRequest(10, 10005, LoanRequestType.OOO, "Иванов Иван Иванович");
+        UuidLoanResponse loanResponse1 = controller.createRequest(loanRequest);
+        containsList.add(loanResponse1);
+        loanRequest = new UuidLoanRequest(10, 10005, LoanRequestType.OOO, "Иванов Иван Иванович");
+        UuidLoanResponse loanResponse2 = controller.createRequest(loanRequest);
+        containsList.add(loanResponse2);
+        loanRequest = new UuidLoanRequest(10, 10005, LoanRequestType.PERSON, "Иванов Иван Иванович");
+        controller.createRequest(loanRequest);
+        List<UuidLoanResponse> responses = service.getAllRequestsWithType(LoanRequestType.OOO);
+        assertTrue((responses.containsAll(containsList)) && (responses.size() == containsList.size()));
     }
 
 }
