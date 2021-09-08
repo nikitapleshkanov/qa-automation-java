@@ -10,10 +10,12 @@ public class UuidLoanResponse {
     private LoanResponseType isAccepted;
     private final UUID requestId;
     private final LoanRequestType loanType;
+    private final Double amount;
 
-    public UuidLoanResponse(UUID requestId, LoanRequestType loanType) {
+    public UuidLoanResponse(UUID requestId, LoanRequestType loanType, Double amount) {
         this.requestId = requestId;
         this.loanType = loanType;
+        this.amount = amount;
         this.isAccepted = LoanResponseType.DECLINED;
     }
 
@@ -25,9 +27,12 @@ public class UuidLoanResponse {
         return requestId;
     }
 
-
     public LoanRequestType getLoanType() {
         return loanType;
+    }
+
+    public Double getAmount() {
+        return amount;
     }
 
     public void setIsAccepted(LoanResponseType isAccepted) {

@@ -18,6 +18,8 @@ public interface LoanCalcService {
 
     List<UuidLoanResponse> getAllRequestsWithType(LoanRequestType type);
 
+    Double getAllRequestsAmountWithType(LoanRequestType type);
+
     void setStatusRequestById(UUID uuid, LoanResponseType status);
 
 }

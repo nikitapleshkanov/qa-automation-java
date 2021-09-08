@@ -30,7 +30,7 @@ public class CalculationsWithAllParamsService implements LoanCalcService {
             throw new IllegalArgumentException("Значение request передано = null");
         }
         UUID requestId = repository.save();
-        UuidLoanResponse loanResponse = new UuidLoanResponse(requestId, request.getLoanType());
+        UuidLoanResponse loanResponse = new UuidLoanResponse(requestId, request.getLoanType(), request.getAmount());
         loanResponse.setIsAccepted(checkIfLoanAccepted(request));
         repository.saveResponse(loanResponse);
         return loanResponse;
@@ -51,6 +51,15 @@ public class CalculationsWithAllParamsService implements LoanCalcService {
                 .filter(x -> x.getLoanType().equals(type))
                 .collect(Collectors.toList());
         return response;
+    }
+
+    public Double getAllRequestsAmountWithType(LoanRequestType type) throws NoSuchElementException {
+        Collection<UuidLoanResponse> responsesArray = repository.getResponses().values();
+        Double sum = responsesArray.stream()
+                .filter(x -> x.getLoanType().equals(type))
+                .map(UuidLoanResponse::getAmount)
+                .reduce(0.0, Double::sum);
+        return sum;
     }
 
     public void setStatusRequestById(UUID uuid, LoanResponseType status) {
