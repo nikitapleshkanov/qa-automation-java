@@ -16,6 +16,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -270,7 +272,7 @@ public class AppTestWithUuidTests {
                 NoSuchElementException.class,
                 () -> service.setStatusRequestById(UUID.randomUUID(), LoanResponseType.APPROVED)
         );
-        assertTrue(thrown.getMessage().equals("Элемент массива с полученным id не найден"));
+        assertTrue(thrown.getMessage().equals("Элемент с полученным id не найден"));
     }
 
     @ParameterizedTest(name = "{index}: Проверка выброса exception: {0}")
@@ -321,6 +323,50 @@ public class AppTestWithUuidTests {
                 () -> new UuidLoanRequest(12, amount, LoanRequestType.IP, "Иванов Иван Иванович")
         );
         assertTrue(thrown.getMessage().equals("Некорректная сумма в заявке"));
+    }
+
+    @Test
+    @DisplayName("Проверка получение всех заявок с типом OOO")
+    public void checkGettingAllOOORequests() {
+        ArrayList<UuidLoanResponse> expectedResponses;
+        expectedResponses = dataBuilderForTestCheckGettingAllOOORequests();
+        List<UuidLoanResponse> responses = service.getAllRequestsWithType(LoanRequestType.OOO);
+        assertTrue((responses.containsAll(expectedResponses)) && (responses.size() == expectedResponses.size()));
+    }
+
+    @Test
+    @DisplayName("Проверка получения суммы всех заявок с типом OOO")
+    public void checkGettingAllOOOAmountsRequests() {
+        Double sum = 0.0;
+        sum = dataBuilderForTestCheckGettingAllOOOAmountsRequests();
+        assertEquals(sum, service.getAllRequestsAmountWithType(LoanRequestType.OOO));
+    }
+
+
+    private ArrayList<UuidLoanResponse> dataBuilderForTestCheckGettingAllOOORequests() {
+        ArrayList<UuidLoanResponse> expectedResponses = new ArrayList<>();
+        loanRequest = new UuidLoanRequest(10, 10005, LoanRequestType.OOO, "Иванов Иван Иванович");
+        UuidLoanResponse loanResponse1 = controller.createRequest(loanRequest);
+        expectedResponses.add(loanResponse1);
+        loanRequest = new UuidLoanRequest(10, 10005, LoanRequestType.OOO, "Иванов Иван Иванович");
+        UuidLoanResponse loanResponse2 = controller.createRequest(loanRequest);
+        expectedResponses.add(loanResponse2);
+        loanRequest = new UuidLoanRequest(10, 10005, LoanRequestType.PERSON, "Иванов Иван Иванович");
+        controller.createRequest(loanRequest);
+        return expectedResponses;
+    }
+
+    private Double dataBuilderForTestCheckGettingAllOOOAmountsRequests() {
+        Double sum = 0.0;
+        loanRequest = new UuidLoanRequest(10, 10001, LoanRequestType.OOO, "Иванов Иван Иванович");
+        sum += loanRequest.getAmount();
+        controller.createRequest(loanRequest);
+        loanRequest = new UuidLoanRequest(10, 10007, LoanRequestType.OOO, "Иванов Иван Иванович");
+        sum += loanRequest.getAmount();
+        controller.createRequest(loanRequest);
+        loanRequest = new UuidLoanRequest(10, 10011, LoanRequestType.PERSON, "Иванов Иван Иванович");
+        controller.createRequest(loanRequest);
+        return sum;
     }
 
 }
