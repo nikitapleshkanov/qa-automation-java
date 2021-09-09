@@ -328,6 +328,22 @@ public class AppTestWithUuidTests {
     @Test
     @DisplayName("Проверка получение всех заявок с типом OOO")
     public void checkGettingAllOOORequests() {
+        ArrayList<UuidLoanResponse> expectedResponses;
+        expectedResponses = dataBuilderForTestCheckGettingAllOOORequests();
+        List<UuidLoanResponse> responses = service.getAllRequestsWithType(LoanRequestType.OOO);
+        assertTrue((responses.containsAll(expectedResponses)) && (responses.size() == expectedResponses.size()));
+    }
+
+    @Test
+    @DisplayName("Проверка получения суммы всех заявок с типом OOO")
+    public void checkGettingAllOOOAmountsRequests() {
+        Double sum = 0.0;
+        sum = dataBuilderForTestCheckGettingAllOOOAmountsRequests();
+        assertEquals(sum, service.getAllRequestsAmountWithType(LoanRequestType.OOO));
+    }
+
+
+    private ArrayList<UuidLoanResponse> dataBuilderForTestCheckGettingAllOOORequests() {
         ArrayList<UuidLoanResponse> expectedResponses = new ArrayList<>();
         loanRequest = new UuidLoanRequest(10, 10005, LoanRequestType.OOO, "Иванов Иван Иванович");
         UuidLoanResponse loanResponse1 = controller.createRequest(loanRequest);
@@ -337,13 +353,10 @@ public class AppTestWithUuidTests {
         expectedResponses.add(loanResponse2);
         loanRequest = new UuidLoanRequest(10, 10005, LoanRequestType.PERSON, "Иванов Иван Иванович");
         controller.createRequest(loanRequest);
-        List<UuidLoanResponse> responses = service.getAllRequestsWithType(LoanRequestType.OOO);
-        assertTrue((responses.containsAll(expectedResponses)) && (responses.size() == expectedResponses.size()));
+        return expectedResponses;
     }
 
-    @Test
-    @DisplayName("Проверка получения суммы всех заявок с типом OOO")
-    public void checkGettingAllOOOAmountsRequests() {
+    private Double dataBuilderForTestCheckGettingAllOOOAmountsRequests() {
         Double sum = 0.0;
         loanRequest = new UuidLoanRequest(10, 10001, LoanRequestType.OOO, "Иванов Иван Иванович");
         sum += loanRequest.getAmount();
@@ -353,7 +366,7 @@ public class AppTestWithUuidTests {
         controller.createRequest(loanRequest);
         loanRequest = new UuidLoanRequest(10, 10011, LoanRequestType.PERSON, "Иванов Иван Иванович");
         controller.createRequest(loanRequest);
-        assertEquals(sum, service.getAllRequestsAmountWithType(LoanRequestType.OOO));
+        return sum;
     }
 
 }
