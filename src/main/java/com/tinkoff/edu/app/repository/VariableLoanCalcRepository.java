@@ -7,15 +7,17 @@ import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
+import static com.tinkoff.edu.app.flow.LoanRequestFlow.getLoanResponseByUUID;
+
 /**
  * Describe data saving
  */
 public class VariableLoanCalcRepository implements LoanCalcRepository {
 
-    private HashMap<UUID, UuidLoanResponse> responsesArray;
+    private HashMap<UUID, UuidLoanResponse> responses;
 
     public VariableLoanCalcRepository() {
-        this.responsesArray = new HashMap<>();
+        this.responses = new HashMap<>();
     }
 
     public UUID save() {
@@ -23,19 +25,15 @@ public class VariableLoanCalcRepository implements LoanCalcRepository {
     }
 
     public void saveResponse(UuidLoanResponse response) {
-        responsesArray.put(response.getRequestId(), response);
+        responses.put(response.getRequestId(), response);
     }
 
     public HashMap<UUID, UuidLoanResponse> getResponses() {
-        return responsesArray;
+        return responses;
     }
 
     public void setStatusById(UUID uuid, LoanResponseType status) throws NoSuchElementException {
-        try {
-            responsesArray.get(uuid).setIsAccepted(status);
-        } catch (NullPointerException e) {
-            throw new NoSuchElementException("Элемент массива с полученным id не найден");
-        }
+        getLoanResponseByUUID(responses, uuid).setIsAccepted(status);
     }
 
 }

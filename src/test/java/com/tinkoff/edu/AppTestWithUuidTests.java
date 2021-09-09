@@ -272,7 +272,7 @@ public class AppTestWithUuidTests {
                 NoSuchElementException.class,
                 () -> service.setStatusRequestById(UUID.randomUUID(), LoanResponseType.APPROVED)
         );
-        assertTrue(thrown.getMessage().equals("Элемент массива с полученным id не найден"));
+        assertTrue(thrown.getMessage().equals("Элемент с полученным id не найден"));
     }
 
     @ParameterizedTest(name = "{index}: Проверка выброса exception: {0}")
@@ -328,17 +328,17 @@ public class AppTestWithUuidTests {
     @Test
     @DisplayName("Проверка получение всех заявок с типом OOO")
     public void checkGettingAllOOORequests() {
-        ArrayList<UuidLoanResponse> containsList = new ArrayList<>();
+        ArrayList<UuidLoanResponse> expectedResponses = new ArrayList<>();
         loanRequest = new UuidLoanRequest(10, 10005, LoanRequestType.OOO, "Иванов Иван Иванович");
         UuidLoanResponse loanResponse1 = controller.createRequest(loanRequest);
-        containsList.add(loanResponse1);
+        expectedResponses.add(loanResponse1);
         loanRequest = new UuidLoanRequest(10, 10005, LoanRequestType.OOO, "Иванов Иван Иванович");
         UuidLoanResponse loanResponse2 = controller.createRequest(loanRequest);
-        containsList.add(loanResponse2);
+        expectedResponses.add(loanResponse2);
         loanRequest = new UuidLoanRequest(10, 10005, LoanRequestType.PERSON, "Иванов Иван Иванович");
         controller.createRequest(loanRequest);
         List<UuidLoanResponse> responses = service.getAllRequestsWithType(LoanRequestType.OOO);
-        assertTrue((responses.containsAll(containsList)) && (responses.size() == containsList.size()));
+        assertTrue((responses.containsAll(expectedResponses)) && (responses.size() == expectedResponses.size()));
     }
 
     @Test
@@ -347,10 +347,10 @@ public class AppTestWithUuidTests {
         Double sum = 0.0;
         loanRequest = new UuidLoanRequest(10, 10001, LoanRequestType.OOO, "Иванов Иван Иванович");
         sum += loanRequest.getAmount();
-        UuidLoanResponse loanResponse1 = controller.createRequest(loanRequest);
+        controller.createRequest(loanRequest);
         loanRequest = new UuidLoanRequest(10, 10007, LoanRequestType.OOO, "Иванов Иван Иванович");
         sum += loanRequest.getAmount();
-        UuidLoanResponse loanResponse2 = controller.createRequest(loanRequest);
+        controller.createRequest(loanRequest);
         loanRequest = new UuidLoanRequest(10, 10011, LoanRequestType.PERSON, "Иванов Иван Иванович");
         controller.createRequest(loanRequest);
         assertEquals(sum, service.getAllRequestsAmountWithType(LoanRequestType.OOO));

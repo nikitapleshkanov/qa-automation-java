@@ -14,6 +14,8 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.tinkoff.edu.app.flow.LoanRequestFlow.getLoanResponseByUUID;
+
 /**
  * Describe data counting
  */
@@ -37,25 +39,21 @@ public class CalculationsWithAllParamsService implements LoanCalcService {
     }
 
     public LoanResponseType getRequestById(UUID uuid) throws NoSuchElementException {
-        HashMap<UUID, UuidLoanResponse> responsesArray = repository.getResponses();
-        try {
-            return responsesArray.get(uuid).getIsAccepted();
-        } catch (NullPointerException e) {
-            throw new NoSuchElementException("Элемент с полученным id не найден");
-        }
+        HashMap<UUID, UuidLoanResponse> responses = repository.getResponses();
+        return getLoanResponseByUUID(responses, uuid).getIsAccepted();
     }
 
     public List<UuidLoanResponse> getAllRequestsWithType(LoanRequestType type) throws NoSuchElementException {
-        Collection<UuidLoanResponse> responsesArray = repository.getResponses().values();
-        List<UuidLoanResponse> response = responsesArray.stream()
+        Collection<UuidLoanResponse> responses = repository.getResponses().values();
+        List<UuidLoanResponse> response = responses.stream()
                 .filter(x -> x.getLoanType().equals(type))
                 .collect(Collectors.toList());
         return response;
     }
 
     public Double getAllRequestsAmountWithType(LoanRequestType type) throws NoSuchElementException {
-        Collection<UuidLoanResponse> responsesArray = repository.getResponses().values();
-        Double sum = responsesArray.stream()
+        Collection<UuidLoanResponse> responses = repository.getResponses().values();
+        Double sum = responses.stream()
                 .filter(x -> x.getLoanType().equals(type))
                 .map(UuidLoanResponse::getAmount)
                 .reduce(0.0, Double::sum);
