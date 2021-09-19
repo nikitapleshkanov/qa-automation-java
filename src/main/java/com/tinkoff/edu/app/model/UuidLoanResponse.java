@@ -44,4 +44,9 @@ public class UuidLoanResponse {
                 + "Your request status is: " + this.getIsAccepted());
     }
 
+    @Override
+    public String toString() {
+        return "requestId: " + requestId + " loanType: " + loanType.toString() + " amount: " + amount + " isAccepted: " + isAccepted.toString() + "\n";
+    }
+
 }
