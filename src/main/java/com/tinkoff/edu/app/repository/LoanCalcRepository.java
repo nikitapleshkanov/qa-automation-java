@@ -10,6 +10,8 @@ public interface LoanCalcRepository {
 
     UUID save();
 
+    void cleanFile();
+
     void saveResponse(UuidLoanResponse response);
 
     HashMap<UUID, UuidLoanResponse> getResponses();

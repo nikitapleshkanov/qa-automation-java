@@ -10,8 +10,11 @@ import com.tinkoff.edu.app.repository.LoanCalcRepository;
 import com.tinkoff.edu.app.repository.VariableLoanCalcRepository;
 import com.tinkoff.edu.app.service.CalculationsWithAllParamsService;
 import com.tinkoff.edu.app.service.LoanCalcService;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -26,7 +29,26 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AppTestWithUuidTests {
+
+    @BeforeEach
+    public void before() {
+        repository = new VariableLoanCalcRepository();
+        service = new CalculationsWithAllParamsService(repository);
+        controller = new LoanCalcController(service);
+    }
+
+    @AfterAll
+    public void clean() {
+        repository.cleanFile();
+    }
+
+    UuidLoanRequest loanRequest;
+    LoanCalcRepository repository;
+    LoanCalcService service;
+    LoanCalcController controller;
 
     static Stream<Arguments> testNameDataProvider() {
         return Stream.of(
@@ -48,11 +70,6 @@ public class AppTestWithUuidTests {
                 Arguments.arguments("значение суммы > 999999.99", 1000000.0)
         );
     }
-
-    private UuidLoanRequest loanRequest;
-    private LoanCalcRepository repository = new VariableLoanCalcRepository();
-    private LoanCalcService service = new CalculationsWithAllParamsService(repository);
-    private LoanCalcController controller = new LoanCalcController(service);
 
     @Test
     @DisplayName("Проверка одобрения заявки: loanType = PERSON, amount = 10000, months = 12")
@@ -317,7 +334,7 @@ public class AppTestWithUuidTests {
 
     @ParameterizedTest(name = "{index}: Проверка выброса exception: {0}")
     @MethodSource("testAmountDataProvider")
-    public void checkGettingExceptionForUsingWrongAmountRequest(String title, Double amount) {
+    public void checkGettingExceptionForUsingWrongAmountRequest(String title, double amount) {
         final RequestException thrown = assertThrows(
                 RequestException.class,
                 () -> new UuidLoanRequest(12, amount, LoanRequestType.IP, "Иванов Иван Иванович")
@@ -337,7 +354,7 @@ public class AppTestWithUuidTests {
     @Test
     @DisplayName("Проверка получения суммы всех заявок с типом OOO")
     public void checkGettingAllOOOAmountsRequests() {
-        Double sum = 0.0;
+        double sum;
         sum = dataBuilderForTestCheckGettingAllOOOAmountsRequests();
         assertEquals(sum, service.getAllRequestsAmountWithType(LoanRequestType.OOO));
     }
@@ -356,8 +373,8 @@ public class AppTestWithUuidTests {
         return expectedResponses;
     }
 
-    private Double dataBuilderForTestCheckGettingAllOOOAmountsRequests() {
-        Double sum = 0.0;
+    private double dataBuilderForTestCheckGettingAllOOOAmountsRequests() {
+        double sum = 0.0;
         loanRequest = new UuidLoanRequest(10, 10001, LoanRequestType.OOO, "Иванов Иван Иванович");
         sum += loanRequest.getAmount();
         controller.createRequest(loanRequest);
